@@ -1,0 +1,18 @@
+export const CAMERAS = [
+  { id: "camera_01", name: "Camera 1" },
+  { id: "camera_02", name: "Camera 2" },
+  { id: "camera_03", name: "Camera 3" },
+  { id: "camera_04", name: "Camera 4" },
+  { id: "camera_05", name: "Camera 5" },
+  { id: "camera_06", name: "Camera 6" },
+  { id: "camera_07", name: "Camera 7" },
+  { id: "camera_08", name: "Camera 8" },
+  { id: "camera_09", name: "Camera 9" },
+  { id: "camera_10", name: "Camera 10" },
+  { id: "camera_11", name: "Camera 11" },
+  { id: "camera_12", name: "Camera 12" },
+  { id: "camera_13", name: "Camera 13" },
+  { id: "camera_14", name: "Camera 14" },
+  { id: "camera_15", name: "Camera 15" },
+  { id: "camera_16", name: "Camera 16" },
+];

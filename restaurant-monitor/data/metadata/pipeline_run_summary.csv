@@ -1,0 +1,2 @@
+﻿camera_id,video_id,status,detections_path,sampled_frames,target_fps
+camera_01,video_001,processed,D:\College\Projects\Project 2\code\restaurant-monitor\data\processed\detections\camera_01\video_001_detections.json,22,2

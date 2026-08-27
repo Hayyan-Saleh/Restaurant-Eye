@@ -1,0 +1,112 @@
+[
+  {
+    "camera_id": "camera_01",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_01/video_001.mp4",
+    "fps": 15.001,
+    "width": 1280,
+    "height": 1440,
+    "frame_count": 53994,
+    "duration_seconds": 3599.459,
+    "duration_minutes": 59.991
+  },
+  {
+    "camera_id": "camera_02",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_02/video_001.mp4",
+    "fps": 15.001,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 53994,
+    "duration_seconds": 3599.462,
+    "duration_minutes": 59.991
+  },
+  {
+    "camera_id": "camera_04",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_04/video_001.mp4",
+    "fps": 7.0,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 16862,
+    "duration_seconds": 2408.745,
+    "duration_minutes": 40.146
+  },
+  {
+    "camera_id": "camera_06",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_06/video_001.mp4",
+    "fps": 7.92,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 28507,
+    "duration_seconds": 3599.43,
+    "duration_minutes": 59.99
+  },
+  {
+    "camera_id": "camera_07",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_07/video_001.mp4",
+    "fps": 15.0,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 53992,
+    "duration_seconds": 3599.372,
+    "duration_minutes": 59.99
+  },
+  {
+    "camera_id": "camera_11",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_11/video_001.mp4",
+    "fps": 15.0,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 34395,
+    "duration_seconds": 2293.01,
+    "duration_minutes": 38.217
+  },
+  {
+    "camera_id": "camera_11",
+    "video_id": "video_002",
+    "path": "data/raw_videos/camera_11/video_002.mp4",
+    "fps": 9.583,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 14864,
+    "duration_seconds": 1551.059,
+    "duration_minutes": 25.851
+  },
+  {
+    "camera_id": "camera_13",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_13/video_001.mp4",
+    "fps": 15.001,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 36104,
+    "duration_seconds": 2406.851,
+    "duration_minutes": 40.114
+  },
+  {
+    "camera_id": "camera_15",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_15/video_001.mp4",
+    "fps": 15.001,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 53994,
+    "duration_seconds": 3599.39,
+    "duration_minutes": 59.99
+  },
+  {
+    "camera_id": "camera_16",
+    "video_id": "video_001",
+    "path": "data/raw_videos/camera_16/video_001.mp4",
+    "fps": 3.998,
+    "width": 1920,
+    "height": 1080,
+    "frame_count": 14391,
+    "duration_seconds": 3599.219,
+    "duration_minutes": 59.987
+  }
+]

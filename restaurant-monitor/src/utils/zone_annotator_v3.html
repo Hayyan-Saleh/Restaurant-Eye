@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>أداة تحديد المناطق</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#0f1117;color:#e2e8f0;height:100vh;overflow:hidden}
+.hdr{background:#1a1f2e;border-bottom:1px solid #2d3748;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hdr h1{font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-btns{display:flex;gap:6px}
+.btn{padding:6px 13px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.b-blue{background:#3b82f6;color:#fff}.b-blue:hover:not(:disabled){background:#2563eb}
+.b-purple{background:#7c3aed;color:#fff}.b-purple:hover:not(:disabled){background:#6d28d9}
+.b-gray{background:#374151;color:#9ca3af}.b-gray:hover:not(:disabled){background:#4b5563;color:#e2e8f0}
+.pbar{height:3px;background:#1f2937}.pfill{height:100%;background:linear-gradient(90deg,#3b82f6,#22c55e);transition:width .4s}
+.layout{display:flex;height:calc(100vh - 47px)}
+.side{width:210px;background:#1a1f2e;border-left:1px solid #2d3748;display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.citem.staff-only{opacity:.55}
+.citem.staff-only:hover{background:#1a1f2e;cursor:default}
+.stitle{padding:10px 12px 8px;font-size:10px;font-weight:700;color:#4b5563;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid #2d3748}
+.clist{flex:1;overflow-y:auto;padding:6px}
+.citem{padding:8px 10px;border-radius:7px;cursor:pointer;margin-bottom:3px;border:1px solid transparent;transition:all .12s}
+.citem:hover{background:#253047}.citem.active{background:#1e3a5f;border-color:#3b82f6}
+.cname{font-size:12px;font-weight:700}.csub{font-size:10px;color:#6b7280;margin-top:1px}
+.bdg{display:inline-block;font-size:9px;padding:1px 5px;border-radius:8px;margin-top:3px;font-weight:700}
+.bd{background:#064e3b;color:#34d399}.bp{background:#3b2400;color:#d97706}
+.bn{background:#1f2937;color:#4b5563}.be{background:#1f2937;color:#6b7280}
+.tsec{border-top:1px solid #2d3748;padding:10px 12px}
+.tlbl{font-size:10px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.tbtns{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.tbtn{padding:8px 10px;border-radius:6px;border:1.5px solid transparent;cursor:pointer;font-size:12px;font-weight:700;text-align:right;transition:all .12s}
+.tbtn.t{background:#1a3a2a;border-color:#166534;color:#4ade80}
+.tbtn.t.sel,.tbtn.t:hover{background:#14532d;border-color:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.15)}
+.tbtn.s{background:#1e3050;border-color:#1e40af;color:#60a5fa}
+.tbtn.s.sel,.tbtn.s:hover{background:#1e3a8a;border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15)}
+.tbtn.a{background:#2e1065;border-color:#5b21b6;color:#c4b5fd}
+.tbtn.a.sel,.tbtn.a:hover{background:#3b0764;border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.18)}
+.bauto{width:100%;padding:8px;border-radius:6px;border:1.5px solid #5b21b6;background:#2e1065;color:#c4b5fd;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:8px;transition:all .12s}
+.bauto:hover:not(:disabled){background:#3b0764;border-color:#a78bfa}
+.bauto:disabled{opacity:.35;cursor:not-allowed}
+.hint{font-size:10px;color:#4b5563;line-height:1.7;background:#111827;padding:7px 9px;border-radius:6px}
+.hint b{color:#6b7280}
+.zpanel{border-top:1px solid #2d3748;max-height:165px;overflow-y:auto}
+.zrow{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;font-size:11px}
+.zrow:hover{background:#1f2937}
+.zdot{width:7px;height:7px;border-radius:2px;margin-left:5px;flex-shrink:0}
+.zdel{background:none;border:none;color:#4b5563;cursor:pointer;padding:1px 4px;font-size:15px;border-radius:3px}
+.zdel:hover{color:#ef4444;background:#1f2937}
+.carea{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.ubar{background:#111827;border-bottom:1px solid #2d3748;padding:7px 14px;display:flex;align-items:center;gap:8px;font-size:11px;color:#6b7280}
+.ubar b{color:#9ca3af}
+.tbar{background:#1a1f2e;border-bottom:1px solid #2d3748;padding:8px 14px;display:flex;align-items:center;gap:8px}
+.ctitle{font-size:13px;font-weight:700}.status{font-size:11px;color:#6b7280;margin-right:auto}
+.dzone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0a0d14;cursor:pointer;border:2px dashed #2d3748;margin:20px;border-radius:12px;transition:all .2s}
+.dzone:hover,.dzone.dov{border-color:#3b82f6;background:#0d1525}
+.di{font-size:46px}.dt{font-size:15px;color:#6b7280}.ds{font-size:12px;color:#374151}
+.cwrap{flex:1;overflow:auto;padding:0;background:#0a0d14;display:none}
+canvas{display:block;cursor:crosshair;border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,.6)}
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center}
+.mbg.open{display:flex}
+.modal{background:#1a1f2e;border-radius:12px;padding:20px;max-width:92vw;max-height:88vh;overflow-y:auto;border:1px solid #2d3748;min-width:340px}
+.modal h2{font-size:14px;margin-bottom:14px}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.mcard{background:#111827;border-radius:8px;overflow:hidden;border:1px solid #2d3748}
+.mctitle{padding:7px 11px;font-size:11px;font-weight:700;color:#9ca3af;border-bottom:1px solid #2d3748;display:flex;justify-content:space-between}
+.mcard canvas{width:100%;display:block}
+.mcbtn{width:100%;padding:7px;background:#1f2937;border:none;color:#60a5fa;font-size:11px;cursor:pointer;font-weight:700}
+.mcbtn:hover{background:#253047}
+.mfooter{margin-top:14px;display:flex;gap:8px;justify-content:flex-end}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1e3a5f;color:#93c5fd;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;border:1px solid #3b82f6;opacity:0;transition:opacity .25s;pointer-events:none;z-index:500}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>🎯 أداة تحديد المناطق — كاميرات المطعم المختلطة</h1>
+  <div class="hdr-btns">
+    <button class="btn b-gray"   onclick="clearCam()">🗑 مسح الحالية</button>
+    <button class="btn b-purple" onclick="openModal()">🖼 معاينة وحفظ الصور</button>
+    <button class="btn b-blue"   onclick="exportJSON()">⬇️ تصدير zones_config.json</button>
+  </div>
+</div>
+<div class="pbar"><div class="pfill" id="pf" style="width:0%"></div></div>
+<div class="layout">
+  <div class="side">
+    <div class="stitle">الكاميرات 01 — 16</div>
+    <div class="clist" id="clist"></div>
+    <div class="tsec">
+      <div class="tlbl">نوع المنطقة</div>
+      <div class="tbtns">
+        <button class="tbtn a sel" id="bA" onclick="setType('table_area')">🟪 منطقة طاولات (حاوية)</button>
+        <button class="tbtn t"     id="bT" onclick="setType('table')">🟩 طاولة مفردة</button>
+        <button class="tbtn s"     id="bS" onclick="setType('service_path')">🟦 ممر خدمة</button>
+      </div>
+      <button class="bauto" id="bauto" onclick="autoH()" disabled>✨ توليد الممر تلقائياً</button>
+      <div class="hint">
+        <b>الاستخدام:</b><br>
+        1) ارسم أولاً <b>منطقة طاولات</b> واسعة تحيط بكل الطاولات<br>
+        2) ثم ارسم كل <b>طاولة مفردة</b> داخلها (يجب أن تكون نقطة المنتصف داخل منطقة الطاولات)<br>
+        • انقر لوضع النقاط · اقترب من النقطة الأولى لإغلاق<br>
+        • <b>Enter</b> حفظ | <b>Esc</b> إلغاء | <b>Ctrl+Z</b> تراجع نقطة
+      </div>
+    </div>
+    <div class="zpanel">
+      <div class="stitle">المناطق المحددة</div>
+      <div id="zlist"></div>
+    </div>
+  </div>
+  <div class="carea">
+    <div class="ubar">
+      <span>📂</span><b>ارفع صورة الكاميرا:</b>
+      <span>اسحب وأفلت، أو</span>
+      <input type="file" id="fi" style="display:none" accept="image/*" onchange="handleFile(event)">
+      <button class="btn b-gray" style="padding:4px 10px;font-size:11px" onclick="document.getElementById('fi').click()">📁 اختر ملف</button>
+    </div>
+    <div class="tbar">
+      <span class="ctitle" id="ctitle">اختر كاميرا</span>
+      <span class="status" id="smsg">← اختر كاميرا من القائمة على اليمين</span>
+      <button class="btn b-gray" style="padding:5px 10px;font-size:11px" onclick="undoPt()">↩ تراجع</button>
+      <button class="btn b-blue" style="padding:5px 12px" onclick="finishZone()">✓ حفظ المنطقة</button>
+    </div>
+    <div class="dzone" id="dz" ondragover="dov(event)" ondragleave="dol(event)" ondrop="ddr(event)" onclick="document.getElementById('fi').click()">
+      <div class="di">🖼️</div>
+      <div class="dt">اسحب صورة الكاميرا هنا</div>
+      <div class="ds">أو انقر لاختيار الملف · PNG / JPG</div>
+    </div>
+    <div class="cwrap" id="cw"><canvas id="cv"></canvas></div>
+  </div>
+</div>
+<div class="mbg" id="mbg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h2>🖼 معاينة الصور مع المناطق المحددة</h2>
+    <div class="mgrid" id="mgrid"></div>
+    <div class="mfooter">
+      <button class="btn b-gray"   onclick="closeModal()">إغلاق</button>
+      <button class="btn b-purple" onclick="dlAll()">⬇️ تحميل كل الصور</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const EZ={"camera_01": {"image_size": {"width": 1280, "height": 1440}, "zones": [{"zone_id": "winter_tables_left", "zone_type": "table_area", "zone_name": "Winter Tables Left", "points": [[974, 380], [298, 772], [132, 243], [554, 115]]}, {"zone_id": "winter_service_path", "zone_type": "service_path", "zone_name": "Winter Service Path", "points": [[952, 353], [266, 666], [239, 1126], [1040, 389]]}, {"zone_id": "winter_tables_right", "zone_type": "table_area", "zone_name": "Winter Tables Right", "points": [[1004, 346], [221, 1067], [747, 1415], [1226, 494]]}, {"zone_id": "winter_front_area", "zone_type": "open_area", "zone_name": "Winter Front Area", "points": [[80, 433], [430, 946], [35, 1330], [2, 518]]}]}, "camera_02": {"image_size": {"width": 1920, "height": 1080}, "zones": [{"zone_id": "winter_section_full", "zone_type": "mixed_area", "zone_name": "Winter Section Full View", "points": [[0, 0], [1920, 0], [1920, 1080], [0, 1080]]}, {"zone_id": "winter_tables_area", "zone_type": "table_area", "zone_name": "Winter Tables Right", "points": [[836, 187], [1420, 507], [1887, 316], [1291, 145]]}, {"zone_id": "winter_service_path", "zone_type": "service_path", "zone_name": "Winter Service Path", "points": [[500, 242], [655, 216], [1482, 613], [1206, 762]]}, {"zone_id": "winter_hallway", "zone_type": "hallway", "zone_name": "Winter Hallway", "points": [[1889, 385], [1910, 592], [798, 925], [755, 829]]}]}, "camera_11": {"image_size": {"width": 1920, "height": 1080}, "zones": [{"zone_id": "entrance_1_full", "zone_type": "entrance", "zone_name": "Entrance 1", "points": [[0, 0], [1920, 0], [1920, 1080], [0, 1080]]}, {"zone_id": "entrance_area", "zone_type": "entrance", "zone_name": "Entrance Area", "points": [[334, 983], [962, 744], [1267, 1042], [360, 1077]]}]}, "camera_13": {"image_size": {"width": 1920, "height": 1080}, "zones": [{"zone_id": "entrance_corridor_full", "zone_type": "corridor", "zone_name": "Entrance Corridor and Prayer Room", "points": [[0, 0], [1920, 0], [1920, 1080], [0, 1080]]}, {"zone_id": "entrance_corridor", "zone_type": "corridor", "zone_name": "Entrance Corridor", "points": [[1322, 172], [1010, 1006], [1626, 1058], [1551, 229]]}, {"zone_id": "prayer_room_entrance", "zone_type": "prayer_room_entrance", "zone_name": "Prayer Room Entrance", "points": [[198, 500], [693, 496], [558, 1071], [8, 916]]}]}, "camera_15": {"image_size": {"width": 1920, "height": 1080}, "zones": [{"zone_id": "summer_section_full", "zone_type": "mixed_area", "zone_name": "Summer Section Full View", "points": [[0, 0], [1920, 0], [1920, 1080], [0, 1080]]}, {"zone_id": "summer_tables_area", "zone_type": "table_area", "zone_name": "Summer Tables Area", "points": [[803, 112], [604, 30], [134, 200], [519, 1061], [1112, 848]]}, {"zone_id": "summer_service_path", "zone_type": "service_path", "zone_name": "Summer Service Path", "points": [[551, 278], [792, 161], [1856, 702], [1559, 1060]]}, {"zone_id": "summer_hallway", "zone_type": "hallway", "zone_name": "Summer Hallway", "points": [[862, 101], [464, 283], [523, 334], [927, 145]]}]}, "camera_16": {"image_size": {"width": 1920, "height": 1080}, "zones": [{"zone_id": "river_section_full", "zone_type": "mixed_area", "zone_name": "River Section Full View", "points": [[0, 0], [1920, 0], [1920, 1080], [0, 1080]]}, {"zone_id": "river_tables_area", "zone_type": "table_area", "zone_name": "River Tables Area", "points": [[706, 78], [600, 124], [1313, 957], [1589, 725]]}, {"zone_id": "river_service_path", "zone_type": "service_path", "zone_name": "River Service Path", "points": [[610, 116], [1248, 1002], [792, 1061], [556, 135]]}]}};
+const CAMS=['camera_01','camera_02','camera_03','camera_04','camera_05','camera_06','camera_07','camera_08','camera_09','camera_10','camera_11','camera_12','camera_13','camera_14','camera_15','camera_16'];
+const MIXED=['camera_01','camera_02','camera_11','camera_12','camera_13','camera_14','camera_15','camera_16'];
+const MIXED_SET=new Set(MIXED);
+let cur=null,AZ={},CI={},pts=[],zt='table_area',sc=1,mx=null;
+for(const c of CAMS){const ex=EZ[c];AZ[c]=ex?ex.zones.map(z=>({...z})):[];}
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+cv.addEventListener('click',oc);
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();mx={x:e.clientX-r.left,y:e.clientY-r.top};if(cur&&CI[cur])rd();});
+cv.addEventListener('mouseleave',()=>{mx=null;rd();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter')finishZone();
+  if(e.key==='Escape'){pts=[];rd();us();}
+  if(e.key==='z'&&(e.ctrlKey||e.metaKey)){e.preventDefault();undoPt();}
+});
+function oc(e){
+  if(!cur||!CI[cur])return;
+  const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  if(pts.length>=3&&Math.hypot(x-pts[0].x,y-pts[0].y)<16){finishZone();return;}
+  pts.push({x,y});us();rd();
+}
+const C={table_area:{s:'#7c3aed',f:'rgba(124,58,237,.10)'},table:{s:'#22c55e',f:'rgba(34,197,94,.20)'},service_path:{s:'#3b82f6',f:'rgba(59,130,246,.18)'},hallway:{s:'#3b82f6',f:'rgba(59,130,246,.12)'},open_area:{s:'#f59e0b',f:'rgba(245,158,11,.12)'},entrance:{s:'#ec4899',f:'rgba(236,72,153,.12)'},corridor:{s:'#ec4899',f:'rgba(236,72,153,.12)'},mixed_area:{s:'#6b7280',f:'rgba(107,114,128,.08)'},prayer_room_entrance:{s:'#f97316',f:'rgba(249,115,22,.12)'},default:{s:'#a78bfa',f:'rgba(167,139,250,.15)'}};
+// Ray-casting point-in-polygon test — used to find which table_area contains a new table zone
+function pip(pt,poly){
+  let inside=false;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];
+    const hit=((yi>pt[1])!==(yj>pt[1]))&&(pt[0]<(xj-xi)*(pt[1]-yi)/(yj-yi)+xi);
+    if(hit)inside=!inside;
+  }
+  return inside;
+}
+function centroid(pts){return [pts.reduce((s,p)=>s+p[0],0)/pts.length,pts.reduce((s,p)=>s+p[1],0)/pts.length];}
+function findParentArea(cam,op){
+  const c=centroid(op);
+  const areas=(AZ[cam]||[]).filter(z=>z.zone_type==='table_area');
+  return areas.find(a=>pip(c,a.points))||null;
+}
+function cl(t){return C[t]||C.default;}
+function rd(c2,im2,s2,cam2){
+  const c=c2||ctx,im=im2||(cur&&CI[cur]?.img),s=s2||sc,cam=cam2||cur;
+  if(!im)return;
+  c.clearRect(0,0,c.canvas.width,c.canvas.height);c.drawImage(im,0,0,c.canvas.width,c.canvas.height);
+  for(const z of(AZ[cam]||[]))dp(c,z.points.map(p=>[p[0]*s,p[1]*s]),cl(z.zone_type),z.zone_name);
+  if(!c2&&pts.length>0){
+    const co=cl(zt);
+    c.beginPath();c.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<pts.length;i++)c.lineTo(pts[i].x,pts[i].y);
+    if(mx)c.lineTo(mx.x,mx.y);
+    c.strokeStyle=co.s;c.lineWidth=2;c.setLineDash([5,4]);c.stroke();c.setLineDash([]);
+    for(let i=0;i<pts.length;i++){const p=pts[i];c.beginPath();c.arc(p.x,p.y,i===0?7:5,0,Math.PI*2);c.fillStyle=i===0?'#fff':co.s;c.fill();c.strokeStyle=co.s;c.lineWidth=1.5;c.stroke();}
+    if(pts.length>=3&&mx){const d=Math.hypot(mx.x-pts[0].x,mx.y-pts[0].y);if(d<16){c.beginPath();c.arc(pts[0].x,pts[0].y,13,0,Math.PI*2);c.strokeStyle='#fff';c.lineWidth=2;c.setLineDash([3,3]);c.stroke();c.setLineDash([]);}}
+  }
+}
+function dp(c,ps,co,label){
+  if(ps.length<2)return;
+  c.beginPath();c.moveTo(ps[0][0],ps[0][1]);for(let i=1;i<ps.length;i++)c.lineTo(ps[i][0],ps[i][1]);
+  c.closePath();c.fillStyle=co.f;c.fill();c.strokeStyle=co.s;c.lineWidth=2;c.stroke();
+  if(label){const cx=ps.reduce((s,p)=>s+p[0],0)/ps.length,cy=ps.reduce((s,p)=>s+p[1],0)/ps.length;c.font='bold 12px Segoe UI';c.textAlign='center';c.fillStyle='rgba(0,0,0,.6)';c.fillText(label,cx+1,cy+1);c.fillStyle=co.s;c.fillText(label,cx,cy);c.textAlign='start';}
+}
+function dov(e){e.preventDefault();document.getElementById('dz').classList.add('dov');}
+function dol(e){document.getElementById('dz').classList.remove('dov');}
+function ddr(e){e.preventDefault();document.getElementById('dz').classList.remove('dov');const f=e.dataTransfer.files[0];if(f&&cur)lf(f);else if(!cur)toast('⚠️ اختر كاميرا أولاً');}
+function handleFile(e){const f=e.target.files[0];if(f&&cur)lf(f);else if(!cur)toast('⚠️ اختر كاميرا أولاً');e.target.value='';}
+function lf(file){
+  if(!cur){toast('⚠️ اختر كاميرا أولاً');return;}
+  const url=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{CI[cur]={img:im,W:im.naturalWidth,H:im.naturalHeight};sc_setup(im);toast('✓ تم تحميل صورة '+cur);rl();uab();};
+  im.src=url;
+}
+function sc_setup(im){
+  const wrap=document.getElementById('cw');
+  wrap.style.display='block';
+  document.getElementById('dz').style.display='none';
+  // نحسب الأبعاد بعد ما الـ wrap صار مرئي
+  requestAnimationFrame(()=>{
+    const mw=wrap.clientWidth-4,mh=wrap.clientHeight-4;
+    sc=Math.min(mw/im.naturalWidth,mh/im.naturalHeight);
+    cv.width=Math.round(im.naturalWidth*sc);
+    cv.height=Math.round(im.naturalHeight*sc);
+    rd();
+  });
+}
+function selCam(cam){
+  cur=cam;pts=[];
+  const num=cam.replace('camera_','');
+  document.getElementById('ctitle').textContent='Camera '+num;
+  rl();rz();us();uab();
+  if(CI[cam]){document.getElementById('dz').style.display='none';document.getElementById('cw').style.display='block';sc_setup(CI[cam].img);}
+  else{document.getElementById('dz').style.display='flex';document.getElementById('cw').style.display='none';}
+}
+function setType(t){
+  zt=t;
+  document.getElementById('bA').classList.toggle('sel',t==='table_area');
+  document.getElementById('bT').classList.toggle('sel',t==='table');
+  document.getElementById('bS').classList.toggle('sel',t==='service_path');
+  us();
+}
+function finishZone(){
+  if(pts.length<3){toast('⚠️ ضع 3 نقاط على الأقل');return;}
+  if(!CI[cur]){toast('⚠️ ارفعي صورة الكاميرا أولاً');return;}
+  const op=pts.map(p=>[Math.round(p.x/sc),Math.round(p.y/sc)]);
+  const zs=AZ[cur],cs=cur.replace('camera_','cam');
+
+  if(zt==='table'){
+    // Leaf table zone MUST sit inside an existing table_area container.
+    const parent=findParentArea(cur,op);
+    if(!parent){toast('⚠️ ارسم "منطقة طاولات" حاوية أولاً، والطاولة يجب أن تقع بداخلها');return;}
+    const n=zs.filter(z=>z.zone_type==='table'&&z.parent_zone_id===parent.zone_id).length+1;
+    zs.push({
+      zone_id:`${parent.zone_id}_table_${n}`,
+      zone_type:'table',
+      zone_name:`طاولة ${n}`,
+      parent_zone_id:parent.zone_id,
+      points:op,
+    });
+    pts=[];rd();rl();rz();us();uab();toast(`✓ تم حفظ "طاولة ${n}" داخل ${parent.zone_name}`);
+    return;
+  }
+
+  if(zt==='table_area'){
+    const n=zs.filter(z=>z.zone_type==='table_area').length+1;
+    zs.push({zone_id:`${cs}_table_area_${n}`,zone_type:'table_area',zone_name:`منطقة طاولات ${n}`,points:op});
+    pts=[];rd();rl();rz();us();uab();toast(`✓ تم حفظ "منطقة طاولات ${n}"`);
+    return;
+  }
+
+  // service_path
+  const n=zs.filter(z=>z.zone_type==='service_path').length+1;
+  zs.push({zone_id:`${cs}_service_${n}`,zone_type:'service_path',zone_name:`ممر خدمة ${n}`,points:op});
+  pts=[];rd();rl();rz();us();uab();toast(`✓ تم حفظ "ممر خدمة ${n}"`);
+}
+function undoPt(){pts.pop();rd();us();}
+function delZ(i){
+  const z=AZ[cur][i];
+  if(z.zone_type==='table_area'){
+    const kids=AZ[cur].filter(k=>k.parent_zone_id===z.zone_id).length;
+    if(kids&&!confirm(`هذه المنطقة تحوي ${kids} طاولة/طاولات — حذفها سيحذف الطاولات الفرعية أيضاً. متابعة؟`))return;
+    AZ[cur]=AZ[cur].filter(k=>k.parent_zone_id!==z.zone_id);
+  }
+  AZ[cur]=AZ[cur].filter(k=>k!==z);
+  rd();rl();rz();uab();
+}
+function clearCam(){if(!cur)return;if(!confirm('مسح كل مناطق '+cur+'؟'))return;AZ[cur]=[];pts=[];rd();rl();rz();uab();}
+function autoH(){
+  if(!cur)return;
+  const ts=AZ[cur].filter(z=>z.zone_type==='table_area');
+  if(!ts.length){toast('⚠️ ارسمي الطاولات أولاً');return;}
+  AZ[cur]=AZ[cur].filter(z=>z.zone_type!=='service_path');
+  const ci=CI[cur]||{W:1920,H:1080};
+  AZ[cur].push({zone_id:cur.replace('camera_','cam')+'_service_auto',zone_type:'service_path',zone_name:'ممر خدمة (تلقائي)',points:[[0,0],[ci.W,0],[ci.W,ci.H],[0,ci.H]],auto_generated:true,excludes_tables:true});
+  rd();rl();rz();uab();toast('✨ تم توليد ممر الخدمة تلقائياً!');
+}
+function uab(){const b=document.getElementById('bauto');b.disabled=!(cur&&AZ[cur]?.some(z=>z.zone_type==='table_area')&&CI[cur]);}
+function rl(){
+  const el=document.getElementById('clist');el.innerHTML='';let done=0;
+  for(const cam of CAMS){
+    const isMixed=MIXED_SET.has(cam);
+    const zs=AZ[cam]||[],hi=!!CI[cam];
+    const hasT=zs.some(z=>z.zone_type==='table_area'),hasS=zs.some(z=>z.zone_type==='service_path'),isDone=hasT&&hasS;
+    if(isMixed&&isDone)done++;
+    let bdg;
+    if(!isMixed){bdg='<span class="bdg" style="background:#1e3a5f;color:#60a5fa">🔒 staff only</span>';}
+    else if(!hi){bdg='<span class="bdg bn">○ بدون صورة</span>';}
+    else if(isDone){bdg='<span class="bdg bd">✓ مكتملة</span>';}
+    else if(hasT||hasS){bdg='<span class="bdg bp">◑ ناقصة</span>';}
+    else{bdg='<span class="bdg be">○ فاضية</span>';}
+    const d=document.createElement('div');
+    d.className='citem'+(cam===cur?' active':'')+(isMixed?'':' staff-only');
+    d.onclick=()=>selCam(cam);
+    const num=cam.replace('camera_','');
+    d.innerHTML=`<div class="cname">Camera ${num}</div><div class="csub">${isMixed?zs.length+' منطقة':'لا تحتاج zones'}${hi?'':isMixed?' · لا صورة':''}</div>${bdg}`;
+    el.appendChild(d);
+  }
+  document.getElementById('pf').style.width=Math.round(done/MIXED.length*100)+'%';
+}
+function rz(){
+  const el=document.getElementById('zlist');
+  if(!cur){el.innerHTML='';return;}
+  const zs=AZ[cur]||[];
+  if(!zs.length){el.innerHTML='<div style="padding:8px 12px;font-size:11px;color:#374151">لا توجد مناطق</div>';return;}
+  el.innerHTML='';
+  zs.forEach((z,i)=>{
+    const co=cl(z.zone_type);const d=document.createElement('div');d.className='zrow';
+    const indent=z.parent_zone_id?'padding-right:16px':'';
+    d.innerHTML=`<div style="display:flex;align-items:center;gap:4px;overflow:hidden;flex:1;${indent}"><div class="zdot" style="background:${co.s}"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${z.parent_zone_id?'└ ':''}${z.zone_name}</span>${z.auto_generated?'<span style="font-size:9px;color:#7c3aed">✨</span>':''}</div><button class="zdel" onclick="delZ(${i})">×</button>`;
+    el.appendChild(d);
+  });
+}
+function us(){
+  const el=document.getElementById('smsg');
+  if(!cur){el.textContent='← اختر كاميرا';return;}
+  if(!CI[cur]){el.textContent='ارفع صورة الكاميرا أولاً ↑';return;}
+  if(!pts.length){const lbl=zt==='table_area'?'منطقة طاولات':zt==='table'?'طاولة مفردة':'ممر خدمة';el.textContent='انقر لرسم '+lbl;}
+  else{el.textContent=pts.length+' نقطة — Enter للحفظ | Esc للإلغاء';}
+}
+function openModal(){
+  const g=document.getElementById('mgrid');g.innerHTML='';
+  for(const cam of MIXED){
+    const zs=AZ[cam]||[],ci=CI[cam];
+    const card=document.createElement('div');card.className='mcard';
+    const t=document.createElement('div');t.className='mctitle';t.innerHTML=`<span>Camera ${cam.replace('camera_','')}</span><span style="font-size:10px;color:#4b5563">${zs.length} مناطق</span>`;card.appendChild(t);
+    if(!ci){const ph=document.createElement('div');ph.style.cssText='height:110px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#374151';ph.textContent='لا توجد صورة مرفوعة';card.appendChild(ph);}
+    else{
+      const c2=document.createElement('canvas'),w=500,h=Math.round(500*ci.H/ci.W);c2.width=w;c2.height=h;
+      const cx=c2.getContext('2d'),s2=w/ci.W;cx.drawImage(ci.img,0,0,w,h);
+      for(const z of zs)dp(cx,z.points.map(p=>[p[0]*s2,p[1]*s2]),cl(z.zone_type),z.zone_name);
+      const dlb=document.createElement('button');dlb.className='mcbtn';dlb.textContent='⬇️ تحميل هذه الصورة';dlb.onclick=()=>dli(cam,c2);
+      card.appendChild(c2);card.appendChild(dlb);
+    }
+    g.appendChild(card);
+  }
+  document.getElementById('mbg').classList.add('open');
+}
+function closeModal(){document.getElementById('mbg').classList.remove('open');}
+function dli(cam,c){const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',.92);a.download=cam+'_zones_preview.jpg';a.click();toast('✓ تم تحميل '+cam);}
+async function dlAll(){
+  let n=0;
+  for(const cam of MIXED){
+    const ci=CI[cam];if(!ci)continue;
+    const zs=AZ[cam]||[],w=1280,h=Math.round(1280*ci.H/ci.W);
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    const cx=c.getContext('2d'),s2=w/ci.W;cx.drawImage(ci.img,0,0,w,h);
+    for(const z of zs)dp(cx,z.points.map(p=>[p[0]*s2,p[1]*s2]),cl(z.zone_type),z.zone_name);
+    dli(cam,c);n++;await new Promise(r=>setTimeout(r,350));
+  }
+  toast(n?'✓ تم تحميل '+n+' صور':'⚠️ لا توجد صور مرفوعة');
+}
+function exportJSON(){
+  const out={};
+  for(const cam of MIXED){const ci=CI[cam];out[cam]={image_size:ci?{width:ci.W,height:ci.H}:(EZ[cam]?.image_size||{width:1920,height:1080}),zones:AZ[cam]||[]};}
+  const b=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='zones_config_mixed.json';a.click();URL.revokeObjectURL(u);
+  toast('✓ تم تصدير zones_config_mixed.json');
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+rl();us();
+</script>
+</body>
+</html>

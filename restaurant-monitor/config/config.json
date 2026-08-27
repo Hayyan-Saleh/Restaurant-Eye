@@ -1,0 +1,36 @@
+{
+    "project": {
+        "name": "restaurant-monitor",
+        "version": "2.0-live"
+    },
+    "pipeline": {
+        "process_fps": 2,
+        "device": "cuda"
+    },
+    "detector": {
+        "model": "models/yolo/yolov8n-pose.pt",
+        "conf_threshold": 0.25,
+        "imgsz": 640,
+        "min_box_width": 2,
+        "min_box_height": 2
+    },
+    "tracker": {
+        "max_age": 10,
+        "n_init": 3,
+        "nms_max_overlap": 0.3,
+        "max_cosine_distance": 0.4
+    },
+    "paths": {
+        "videos_index": "data/metadata/videos/videos_index.json",
+        "zones_config": "config/zones_config.json",
+        "outputs_dir": "data/artifacts/outputs",
+        "embeddings_dir": "data/artifacts/reid_embeddings",
+        "debug_crops_dir": "data/debug/crops",
+        "debug_zones_reference_frames_dir": "data/debug/zones/reference_frames",
+        "debug_zones_preview_dir": "data/debug/zones/zones_preview"
+    },
+    "debug": {
+        "show_live_view": true,
+        "save_debug_crops": false
+    }
+}

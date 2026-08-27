@@ -1,0 +1,94 @@
+{
+    "cameras": {
+      "camera_01": {
+        "type": "mixed",
+        "location": "Winter_section",
+        "enabled": true,
+        "description": "Indoor tables"
+      },
+      "camera_02": {
+        "type": "mixed",
+        "location": "Winter_section",
+        "enabled": true,
+        "description": "Indoor tables"
+      },
+      "camera_04": {
+        "type": "staff_only",
+        "location": "cashier",
+        "enabled": true,
+        "description": "Cashier, Winter Section "
+      },
+      "camera_05": {
+        "type": "staff_only",
+        "location": "Hookah section",
+        "enabled": true,
+        "description": "Hookah preparation section"
+      },
+      "camera_06": {
+        "type": "mixed",
+        "location": "Bathroom entrance",
+        "enabled": true,
+        "description": "Bathroom entrance"
+      },
+      "camera_07": {
+        "type": "staff_only",
+        "location": "buffet",
+        "enabled": true,
+        "description": "buffet"
+      },
+      "camera_08": {
+        "type": "staff_only",
+        "location": "kitchen",
+        "enabled": true,
+        "description": "indoor kitchen"
+      },
+      "camera_09": {
+        "type": "staff_only",
+        "location": "kitchen",
+        "enabled": true,
+        "description": "kitchen in the middle"
+      },
+      "camera_10": {
+        "type": "staff_only",
+        "location": "kitchen",
+        "enabled": true,
+        "description": "Outdoor kitchen"
+      },
+      "camera_11": {
+        "type": "mixed",
+        "location": "entrance_1",
+        "enabled": true,
+        "description": "Entrance to the restaurant"
+      },
+      "camera_12": {
+        "type": "mixed",
+        "location": "entrance_2",
+        "enabled": true,
+        "description": "Entrance to the restaurant"
+      },
+      "camera_13": {
+        "type": "mixed",
+        "location": "Entrance corridor and prayer room",
+        "enabled": true,
+        "description": "Entrance corridor to the restaurant"
+      },
+      "camera_14": {
+        "type": "mixed",
+        "location": "Summer section",
+        "enabled": true,
+        "description": "Outdoor tables"
+      },
+      "camera_15": {
+        "type": "mixed",
+        "location": "Summer section",
+        "enabled": true,
+        "description": "Outdoor tables"
+      },
+      "camera_16": {
+        "type": "mixed",
+        "location": "River section",
+        "enabled": true,
+        "description": "Outdoor tables"
+      }
+    }
+  }
